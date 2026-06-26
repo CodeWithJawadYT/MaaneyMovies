@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maaneymovies — Watch Full Movies Free</title>
+<style>
+  :root{
+    --bg:#050505; --bg2:#120408; --red:#E50914; --red2:#FF1E27;
+    --txt:#ffffff; --muted:#A3A3A3; --soft:#D4D4D4; --gold:#EAB308;
+    --card:#120408; --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden}
+  img{display:block}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--red);color:#fff}
+  @media(min-width:768px){.container{padding:0 48px}}
+
+  /* ---------- Navbar ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s;
+    background:linear-gradient(to bottom,rgba(0,0,0,.85),transparent)}
+  header.scrolled{background:rgba(0,0,0,.85);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px}
+  @media(min-width:768px){.nav{padding:16px 48px}}
+  .logo{font-weight:800;letter-spacing:.12em;font-size:26px;text-transform:uppercase;white-space:nowrap}
+  .logo .a{color:var(--red);text-shadow:0 0 10px rgba(229,9,20,.55)}
+  .logo .b{color:#fff}
+  nav.links{display:none;gap:22px}
+  @media(min-width:880px){nav.links{display:flex}}
+  nav.links a{font-size:14px;color:var(--muted);transition:color .2s;cursor:pointer}
+  nav.links a:hover,nav.links a.active{color:#fff}
+  .nav-right{display:flex;align-items:center;gap:12px}
+  .search{position:relative;display:flex;align-items:center}
+  .search input{width:150px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+    color:#fff;border-radius:999px;padding:9px 14px 9px 34px;font-size:14px;outline:none;transition:.2s}
+  @media(min-width:1024px){.search input{width:230px}}
+  .search input:focus{box-shadow:0 0 0 2px var(--red);background:rgba(255,255,255,.15)}
+  .search svg{position:absolute;left:11px;width:16px;height:16px;color:rgba(255,255,255,.5)}
+  .menu-btn{display:flex;background:none;border:none;color:#fff;cursor:pointer}
+  @media(min-width:880px){.menu-btn{display:none}}
+  .mobile-links{display:none;flex-direction:column;gap:14px;padding:16px;background:rgba(0,0,0,.96);border-top:1px solid var(--line)}
+  .mobile-links.open{display:flex}
+  .mobile-links a{color:var(--soft);font-size:16px;cursor:pointer}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;height:84vh;min-height:560px;display:flex;flex-direction:column;justify-content:flex-end}
+  .hero .bg{position:absolute;inset:0}
+  .hero .bg img{width:100%;height:100%;object-fit:cover;object-position:top}
+  .hero .shade1{position:absolute;inset:0;background:linear-gradient(to right,var(--bg),rgba(5,5,5,.7),transparent);z-index:1}
+  .hero .shade2{position:absolute;inset:0;background:linear-gradient(to top,var(--bg),transparent 60%);z-index:1}
+  .hero-content{position:relative;z-index:2;max-width:640px;padding:0 16px 96px}
+  @media(min-width:768px){.hero-content{padding:0 48px 112px}}
+  .tag{font-family:monospace;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--red)}
+  .hero h1{font-size:clamp(34px,6vw,64px);font-weight:800;line-height:1.02;margin-top:10px;text-shadow:0 4px 24px rgba(0,0,0,.7)}
+  .hero .meta{display:flex;gap:16px;margin-top:14px;font-family:monospace;font-size:14px;color:var(--soft);flex-wrap:wrap}
+  .hero .meta .star{color:var(--gold);display:flex;align-items:center;gap:5px}
+  .hero p.desc{margin-top:14px;color:var(--soft);max-width:560px;line-height:1.6;font-size:15px;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .hero-actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .hero-dots{position:absolute;bottom:30px;right:24px;z-index:3;display:flex;gap:8px}
+  @media(min-width:768px){.hero-dots{right:48px}}
+  .hero-dots button{height:6px;border-radius:999px;border:none;background:rgba(255,255,255,.4);width:12px;cursor:pointer;transition:.3s}
+  .hero-dots button.on{width:32px;background:var(--red)}
+
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;border-radius:4px;padding:12px 26px;
+    font-size:15px;cursor:pointer;border:none;transition:transform .25s,background .25s;white-space:nowrap}
+  .btn:hover{transform:scale(1.05)}
+  .btn-red{background:var(--red);color:#fff;box-shadow:0 0 18px rgba(229,9,20,.45)}
+  .btn-red:hover{background:var(--red2)}
+  .btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px)}
+  .btn-ghost:hover{background:rgba(255,255,255,.25)}
+  .btn:disabled{opacity:.5;cursor:default;transform:none}
+  .icon-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;width:48px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.3);color:#fff;cursor:pointer;transition:.2s;font-size:20px}
+  .icon-btn:hover{border-color:#fff}
+  .icon-btn.saved{background:var(--red);border-color:var(--red)}
+
+  /* ---------- Rows / cards ---------- */
+  main{padding-bottom:40px}
+  .rows{position:relative;z-index:5;margin-top:-60px}
+  .row{padding:12px 0}
+  .row h2{font-size:22px;font-weight:600;padding:0 16px 8px}
+  @media(min-width:768px){.row h2{padding:0 48px 8px}}
+  .row-scroll{display:flex;gap:14px;overflow-x:auto;padding:24px 16px;scroll-snap-type:x mandatory;scrollbar-width:none}
+  @media(min-width:768px){.row-scroll{padding:24px 48px}}
+  .row-scroll::-webkit-scrollbar{display:none}
+  .card{position:relative;flex:0 0 auto;width:150px;aspect-ratio:2/3;border-radius:6px;overflow:hidden;
+    background:var(--card);cursor:pointer;scroll-snap-align:start;transition:transform .45s ease,box-shadow .45s}
+  @media(min-width:768px){.card{width:200px}}
+  .card:hover{transform:scale(1.1);z-index:20;box-shadow:0 20px 50px rgba(0,0,0,.85)}
+  .card .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+    padding:12px;font-size:16px;font-weight:700}
+  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .card .badges{position:absolute;top:8px;left:8px;z-index:3;display:flex;gap:6px}
+  .badge{font-family:monospace;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;
+    background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff}
+  .card .overlay{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:12px;background:linear-gradient(to top,var(--bg),rgba(5,5,5,.2),transparent);opacity:0;transition:opacity .3s}
+  .card:hover .overlay{opacity:1}
+  .card .overlay h3{font-size:14px;line-height:1.2}
+  .card .overlay .crow{display:flex;align-items:center;gap:10px;margin-top:4px;font-family:monospace;font-size:11px}
+  .card .overlay .crow .star{color:var(--gold);display:flex;align-items:center;gap:3px}
+  .card .overlay .crow .yr{color:var(--muted)}
+  .card .overlay .acts{display:flex;gap:8px;margin-top:10px}
+  .mini{height:32px;width:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;font-size:16px}
+  .mini.play{background:#fff;color:#000}
+  .mini.add{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.4);color:#fff}
+  .mini.add.saved{background:var(--red);border-color:var(--red)}
+
+  /* ---------- Grid views ---------- */
+  .view{padding-top:96px;min-height:100vh}
+  .view h1{font-size:clamp(26px,4vw,40px);font-weight:800;padding:0 16px}
+  @media(min-width:768px){.view h1{padding:0 48px}}
+  .filters{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px 16px 0}
+  @media(min-width:768px){.filters{padding:22px 48px 0}}
+  .seg{display:flex;border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:4px}
+  .seg button{padding:7px 16px;border-radius:999px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;transition:.2s}
+  .seg button.on{background:var(--red);color:#fff}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;padding:18px 16px 0}
+  @media(min-width:768px){.chips{padding:18px 48px 0}}
+  .chip{padding:7px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+    color:var(--muted);font-size:14px;cursor:pointer;transition:.2s}
+  .chip:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+  .chip.on{background:#fff;color:#000;border-color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;padding:28px 16px}
+  @media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));padding:28px 48px}}
+  .grid .card{width:100%}
+  .empty{text-align:center;color:var(--muted);padding:80px 16px}
+
+  /* ---------- Details modal ---------- */
+  .modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);
+    overflow-y:auto;display:none}
+  .modal.open{display:block}
+  .modal-inner{max-width:1100px;margin:0 auto;min-height:100%;background:var(--bg);position:relative}
+  .modal-hero{position:relative;height:48vh;min-height:300px}
+  .modal-hero img{width:100%;height:100%;object-fit:cover;object-position:top}
+  .modal-hero .fallback{position:absolute;inset:0}
+  .modal-hero .shade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg),rgba(5,5,5,.4),rgba(5,5,5,.3))}
+  .close-btn{position:absolute;top:18px;right:18px;z-index:5;height:42px;width:42px;border-radius:999px;
+    background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .close-btn:hover{background:var(--red)}
+  .modal-body{position:relative;z-index:2;margin-top:-90px;padding:0 16px 60px}
+  @media(min-width:768px){.modal-body{padding:0 40px 60px}}
+  .md-head{display:flex;flex-wrap:wrap;gap:24px}
+  .md-poster{width:150px;flex:0 0 auto;aspect-ratio:2/3;border-radius:8px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 20px 50px rgba(0,0,0,.7);position:relative}
+  @media(min-width:768px){.md-poster{width:220px}}
+  .md-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .md-info{flex:1;min-width:260px;padding-top:6px}
+  .pill{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12px;font-family:monospace;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff}
+  .md-info h1{font-size:clamp(26px,4vw,44px);font-weight:800;margin-top:12px}
+  .md-meta{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-family:monospace;font-size:14px;color:var(--soft)}
+  .md-meta .star{color:var(--gold);display:flex;align-items:center;gap:5px}
+  .md-genres{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .gtag{padding:5px 12px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--soft)}
+  .md-audio{margin-top:18px}
+  .md-audio .lbl{font-family:monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .audio-pill{padding:7px 16px;border-radius:999px;font-size:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);color:var(--soft);margin-right:8px}
+  .md-desc{color:var(--soft);line-height:1.65;margin-top:18px;max-width:760px}
+  .md-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  .player-wrap{margin-top:44px}
+  .player-wrap h2{font-size:22px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .player-box{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+  .player-box video{width:100%;height:100%;background:#000}
+  .player-cta{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;border:none;width:100%;background:transparent}
+  .player-cta img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4}
+  .player-cta .circle{position:relative;z-index:2;height:80px;width:80px;border-radius:999px;background:var(--red);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,9,20,.6);transition:transform .3s}
+  .player-cta:hover .circle{transform:scale(1.1)}
+  .player-cta span{position:relative;z-index:2;font-family:monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#fff}
+  .player-note{color:var(--muted);font-family:monospace;font-size:12px;margin-top:12px}
+  .similar{margin-top:40px}
+
+  footer{border-top:1px solid var(--line);padding:40px 16px;text-align:center;color:var(--muted);font-size:13px;margin-top:40px}
+  @media(min-width:768px){footer{padding:40px 48px}}
+  footer .logo{font-size:20px;display:inline-block;margin-bottom:10px}
+  svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<header id="header">
+  <div class="nav">
+    <div style="display:flex;align-items:center;gap:32px">
+      <div class="logo" onclick="go('home')" style="cursor:pointer"><span class="a">Maaney</span><span class="b">movies</span></div>
+      <nav class="links" id="navLinks">
+        <a data-view="home" onclick="go('home')">Home</a>
+        <a data-view="browse" onclick="go('browse')">Categories</a>
+        <a data-view="trending" onclick="go('trending')">Trending</a>
+        <a data-view="watchlist" onclick="go('watchlist')">Watchlist</a>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <form class="search" onsubmit="return doSearch(event)">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" placeholder="Search movies…" />
+      </form>
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-links" id="mobileLinks">
+    <a onclick="go('home')">Home</a>
+    <a onclick="go('browse')">Categories</a>
+    <a onclick="go('trending')">Trending</a>
+    <a onclick="go('watchlist')">Watchlist</a>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<!-- Movie details modal -->
+<div class="modal" id="modal">
+  <div class="modal-inner" id="modalInner"></div>
+</div>
+
+<footer>
+  <div class="logo"><span class="a">Maaney</span><span class="b">movies</span></div>
+  <p>Streaming public-domain feature films, free and legal, via the Internet Archive.</p>
+  <p style="margin-top:6px;opacity:.6">© 2026 Maaneymovies — for personal &amp; educational use.</p>
+</footer>
+
+<script>
+/* ============================================================
+   MAANEYMOVIES — single-file build. 107 public-domain FULL films.
+   Every movie streams a complete .mp4 (not a trailer) from archive.org.
+   Watchlist is saved in your browser (localStorage). No server needed.
+   ============================================================ */
+const MOVIES = [
+  {"id": 1001, "title": "Metropolis", "language": "en", "genres": ["Sci-Fi", "Drama"], "rating": 8.3, "year": 1927, "runtime": 153, "popularity": 100, "audio": ["Silent"], "poster": "https://archive.org/services/img/Metropolis1927EnglishVersion", "video": "https://archive.org/download/Metropolis1927EnglishVersion/Metropolis_1927_English_Version.mp4", "overview": "In a futuristic city sharply divided between the working class and the city planners, the son of the city's mastermind falls in love with a working-class prophet who predicts the coming of a savior."},
+  {"id": 1002, "title": "Night of the Living Dead", "language": "en", "genres": ["Horror", "Thriller"], "rating": 7.8, "year": 1968, "runtime": 96, "popularity": 99, "audio": ["English"], "poster": "https://archive.org/services/img/PhantasmagoriaTheater-NightOfTheLivingDead1968321", "video": "https://archive.org/download/PhantasmagoriaTheater-NightOfTheLivingDead1968321/PhantasmagoriaTheater-NightOfTheLivingDead1968321_512kb.mp4", "overview": "A ragtag group of strangers barricade themselves inside an old farmhouse to survive the night as the recently dead rise and feed on the living."},
+  {"id": 1003, "title": "The General", "language": "en", "genres": ["Comedy", "Action", "Adventure"], "rating": 8.1, "year": 1926, "runtime": 67, "popularity": 95, "audio": ["Silent"], "poster": "https://archive.org/services/img/TheGeneral1926", "video": "https://archive.org/download/TheGeneral1926/The_General_1926_720p.mp4", "overview": "When Union spies steal his beloved locomotive — with his girl aboard — a Confederate railroad engineer single-handedly chases them through enemy lines in Buster Keaton's masterpiece."},
+  {"id": 1004, "title": "Charade", "language": "en", "genres": ["Thriller", "Comedy", "Romance"], "rating": 7.9, "year": 1963, "runtime": 113, "popularity": 94, "audio": ["English"], "poster": "https://archive.org/services/img/charade-stanley-donen-1963-cary-grant-audrey-hepburn-comedie-policiere", "video": "https://archive.org/download/charade-stanley-donen-1963-cary-grant-audrey-hepburn-comedie-policiere/Charade%20Stanley%20Donen%201963%20Cary%20Grant%20Audrey%20Hepburn%20Com%C3%A9die%20polici%C3%A8re.mp4", "overview": "A woman is pursued by several men who want a fortune her murdered husband had stolen. Whom can she trust? Cary Grant and Audrey Hepburn star in this elegant romantic thriller."},
+  {"id": 1005, "title": "Nosferatu", "language": "en", "genres": ["Horror"], "rating": 7.9, "year": 1922, "runtime": 94, "popularity": 92, "audio": ["Silent"], "poster": "https://archive.org/services/img/Nosferatu1922", "video": "https://archive.org/download/Nosferatu1922/Nosferatu.mp4", "overview": "Vampire Count Orlok expresses interest in a new residence and a real-estate agent's wife in this haunting, unauthorized silent adaptation of Bram Stoker's Dracula."},
+  {"id": 1006, "title": "His Girl Friday", "language": "en", "genres": ["Comedy", "Romance"], "rating": 7.8, "year": 1940, "runtime": 92, "popularity": 90, "audio": ["English"], "poster": "https://archive.org/services/img/his_girl_friday", "video": "https://archive.org/download/his_girl_friday/his_girl_friday.mp4", "overview": "A newspaper editor uses every trick in the book to keep his ace reporter ex-wife from remarrying — a lightning-fast screwball comedy classic."},
+  {"id": 1007, "title": "The Cabinet of Dr. Caligari", "language": "en", "genres": ["Horror", "Thriller"], "rating": 8.0, "year": 1920, "runtime": 67, "popularity": 84, "audio": ["Silent"], "poster": "https://archive.org/services/img/thecabinetofdrcaligari", "video": "https://archive.org/download/thecabinetofdrcaligari/KabinettDesDoktorCaligariDas_512kb.mp4", "overview": "A hypnotist uses a sleepwalker to commit murders in this landmark of German Expressionist cinema, told with dizzying painted sets and a famous twist."},
+  {"id": 1008, "title": "Detour", "language": "en", "genres": ["Crime", "Thriller", "Drama"], "rating": 7.2, "year": 1945, "runtime": 67, "popularity": 83, "audio": ["English"], "poster": "https://archive.org/services/img/detour_1945", "video": "https://archive.org/download/detour_1945/detour_4k.ia.mp4", "overview": "A down-on-his-luck pianist hitchhiking to Hollywood is dragged into a spiral of bad luck, blackmail and death in this quintessential film noir."},
+  {"id": 1009, "title": "The Stranger", "language": "en", "genres": ["Thriller", "Crime", "Drama"], "rating": 7.3, "year": 1946, "runtime": 95, "popularity": 82, "audio": ["English"], "poster": "https://archive.org/services/img/TheStranger_0", "video": "https://archive.org/download/TheStranger_0/The_Stranger.mp4", "overview": "An investigator hunts a fugitive Nazi war criminal who has assumed a new identity in a quiet Connecticut town. Directed by and starring Orson Welles."},
+  {"id": 1010, "title": "The 39 Steps", "language": "en", "genres": ["Thriller", "Crime"], "rating": 7.6, "year": 1935, "runtime": 86, "popularity": 80, "audio": ["English"], "poster": "https://archive.org/services/img/youtube-RmSdum4BMqI", "video": "https://archive.org/download/youtube-RmSdum4BMqI/RmSdum4BMqI.mp4", "overview": "An ordinary man is plunged into a spy conspiracy and goes on the run, handcuffed to a stranger, in Alfred Hitchcock's breathless early thriller."},
+  {"id": 1011, "title": "Carnival of Souls", "language": "en", "genres": ["Horror"], "rating": 7.0, "year": 1962, "runtime": 78, "popularity": 78, "audio": ["English"], "poster": "https://archive.org/services/img/CarnivalOfSouls1962", "video": "https://archive.org/download/CarnivalOfSouls1962/Carnival_of_Souls_512kb.mp4", "overview": "After surviving a car crash, a young organist is drawn to an abandoned carnival pavilion and haunted by a ghostly pale-faced man in this eerie cult classic."},
+  {"id": 1012, "title": "House on Haunted Hill", "language": "en", "genres": ["Horror", "Thriller"], "rating": 6.8, "year": 1959, "runtime": 75, "popularity": 76, "audio": ["English"], "poster": "https://archive.org/services/img/house_on_haunted_hill", "video": "https://archive.org/download/house_on_haunted_hill/house_on_haunted_hill.mp4", "overview": "An eccentric millionaire offers five guests $10,000 each if they can survive a night locked inside a haunted mansion. Starring Vincent Price."},
+  {"id": 1013, "title": "The Last Man on Earth", "language": "en", "genres": ["Horror", "Sci-Fi"], "rating": 6.8, "year": 1964, "runtime": 86, "popularity": 74, "audio": ["English"], "poster": "https://archive.org/services/img/TheLastManOnEarthHD", "video": "https://archive.org/download/TheLastManOnEarthHD/The%20Last%20Man%20on%20Earth%20HD.mp4", "overview": "The lone survivor of a plague that turned humanity into vampires hunts the infected by day and barricades himself by night. Vincent Price stars."},
+  {"id": 1014, "title": "A Star Is Born", "language": "en", "genres": ["Drama", "Romance"], "rating": 7.4, "year": 1937, "runtime": 111, "popularity": 72, "audio": ["English"], "poster": "https://archive.org/services/img/AStarIsBorn1937FullHDMovie", "video": "https://archive.org/download/AStarIsBorn1937FullHDMovie/AStarIsBorn%281937%29FullHDMovie.mp4", "overview": "A young actress rises to Hollywood stardom while the fading star who discovered and married her spirals into decline — the original 1937 classic."},
+  {"id": 1015, "title": "Suddenly", "language": "en", "genres": ["Thriller", "Crime"], "rating": 6.7, "year": 1954, "runtime": 75, "popularity": 70, "audio": ["English"], "poster": "https://archive.org/services/img/suddenly", "video": "https://archive.org/download/suddenly/suddenly.mp4", "overview": "Assassins seize a family's home overlooking a train station, plotting to kill the President as he passes through a small town. Frank Sinatra stars against type."},
+  {"id": 1016, "title": "Nothing Sacred", "language": "en", "genres": ["Comedy", "Romance"], "rating": 7.0, "year": 1937, "runtime": 77, "popularity": 68, "audio": ["English"], "poster": "https://archive.org/services/img/nothingsacred1937", "video": "https://archive.org/download/nothingsacred1937/Nothing%20Sacred%20%281937%29.mp4", "overview": "A small-town woman wrongly believed to be dying of radium poisoning becomes a media sensation in New York in this sharp Technicolor screwball satire."},
+  {"id": 1017, "title": "McLintock!", "language": "en", "genres": ["Comedy", "Adventure", "Western"], "rating": 7.0, "year": 1963, "runtime": 127, "popularity": 66, "audio": ["English"], "poster": "https://archive.org/services/img/mclintok_widescreen", "video": "https://archive.org/download/mclintok_widescreen/McLintock.mp4", "overview": "A wealthy cattle baron's estranged wife returns to town demanding a divorce, sparking a boisterous battle of the sexes. John Wayne and Maureen O'Hara star."},
+  {"id": 1018, "title": "My Favorite Brunette", "language": "en", "genres": ["Comedy", "Crime"], "rating": 7.0, "year": 1947, "runtime": 87, "popularity": 64, "audio": ["English"], "poster": "https://archive.org/services/img/my_favorite_brunette", "video": "https://archive.org/download/my_favorite_brunette/my_favorite_brunette.mp4", "overview": "A mild-mannered baby photographer is mistaken for a private eye and tangled up with a glamorous baroness and a gang of crooks. Bob Hope comedy."},
+  {"id": 1019, "title": "The Little Shop of Horrors", "language": "en", "genres": ["Comedy", "Horror"], "rating": 6.2, "year": 1960, "runtime": 72, "popularity": 62, "audio": ["English"], "poster": "https://archive.org/services/img/TheLittleShopOfHorrors1960_765", "video": "https://archive.org/download/TheLittleShopOfHorrors1960_765/TheLittleShopOfHorrors1960.mp4", "overview": "A clumsy florist's assistant raises a man-eating plant that demands to be fed in Roger Corman's beloved low-budget black comedy."},
+  {"id": 1020, "title": "Plan 9 from Outer Space", "language": "en", "genres": ["Sci-Fi", "Horror"], "rating": 4.0, "year": 1959, "runtime": 79, "popularity": 60, "audio": ["English"], "poster": "https://archive.org/services/img/774-plan-9-from-outer-space", "video": "https://archive.org/download/774-plan-9-from-outer-space/774-Plan9FromOuterSpace.mp4", "overview": "Aliens resurrect the dead to stop humanity from creating a doomsday weapon — Ed Wood's gloriously inept film, famous as 'the worst movie ever made.'"},
+  {"id": 1021, "title": "The Phantom of the Opera", "language": "en", "genres": ["Horror", "Drama"], "rating": 7.5, "year": 1925, "runtime": 93, "popularity": 58, "audio": ["Silent"], "poster": "https://archive.org/services/img/ThePhantomoftheOpera", "video": "https://archive.org/download/ThePhantomoftheOpera/Phantom_of_the_Opera_512kb.mp4", "overview": "A disfigured musical genius haunting the Paris Opera House becomes obsessed with a beautiful young soprano. Lon Chaney's iconic silent horror."},
+  {"id": 1022, "title": "The Lost World", "language": "en", "genres": ["Sci-Fi", "Adventure"], "rating": 7.0, "year": 1925, "runtime": 64, "popularity": 56, "audio": ["Silent"], "poster": "https://archive.org/services/img/lost_world", "video": "https://archive.org/download/lost_world/lost_world.mp4", "overview": "An expedition to a remote plateau discovers living dinosaurs in this pioneering silent adventure featuring groundbreaking stop-motion effects."},
+  {"id": 1023, "title": "20,000 Leagues Under the Sea", "language": "en", "genres": ["Sci-Fi", "Adventure"], "rating": 6.1, "year": 1916, "runtime": 105, "popularity": 54, "audio": ["Silent"], "poster": "https://archive.org/services/img/20000LeaguesUndertheSea", "video": "https://archive.org/download/20000LeaguesUndertheSea/20000_Leagues_Under_the_Sea_512kb.mp4", "overview": "The mysterious Captain Nemo prowls the oceans in his submarine Nautilus in this early adaptation of Jules Verne, the first film shot underwater."},
+  {"id": 1024, "title": "The Brain That Wouldn't Die", "language": "en", "genres": ["Horror", "Sci-Fi"], "rating": 4.4, "year": 1962, "runtime": 82, "popularity": 52, "audio": ["English"], "poster": "https://archive.org/services/img/brain_that_wouldnt_die", "video": "https://archive.org/download/brain_that_wouldnt_die/brain_that_wouldnt_die.mp4", "overview": "A surgeon keeps his fiancée's severed head alive after a car crash while searching for a new body — a notorious B-movie cult favorite."},
+  {"id": 1025, "title": "Gulliver's Travels", "language": "en", "genres": ["Animation", "Family", "Adventure"], "rating": 6.5, "year": 1939, "runtime": 76, "popularity": 50, "audio": ["English"], "poster": "https://archive.org/services/img/gullivers_travels1939", "video": "https://archive.org/download/gullivers_travels1939/gullivers_travels1939.mp4", "overview": "Shipwrecked Gulliver washes ashore in the tiny kingdom of Lilliput and must stop two warring lands from going to war over a song. Lavish Fleischer animation."},
+  {"id": 1026, "title": "Jungle Book", "language": "en", "genres": ["Adventure", "Family", "Fantasy"], "rating": 6.8, "year": 1942, "runtime": 108, "popularity": 48, "audio": ["English"], "poster": "https://archive.org/services/img/JungleBook", "video": "https://archive.org/download/JungleBook/Jungle_Book.mp4", "overview": "Raised by wolves, the boy Mowgli grows up among the animals of the Indian jungle and confronts the world of men. Technicolor adaptation of Kipling, starring Sabu."},
+  {"id": 1027, "title": "Scrooge", "language": "en", "genres": ["Drama", "Fantasy"], "rating": 6.7, "year": 1935, "runtime": 78, "popularity": 46, "audio": ["English"], "poster": "https://archive.org/services/img/Scrooge1935_201310", "video": "https://archive.org/download/Scrooge1935_201310/Scrooge_1935.mp4", "overview": "On Christmas Eve, the miserly Ebenezer Scrooge is visited by three spirits who show him the error of his ways in this early sound adaptation of Dickens."},
+  {"id": 1028, "title": "Santa Claus Conquers the Martians", "language": "en", "genres": ["Sci-Fi", "Comedy", "Family"], "rating": 3.8, "year": 1964, "runtime": 81, "popularity": 44, "audio": ["English"], "poster": "https://archive.org/services/img/SantaClausConquerstheMartians1964", "video": "https://archive.org/download/SantaClausConquerstheMartians1964/SantaClausConquerstheMartians1964.mp4", "overview": "Martians kidnap Santa Claus to bring Christmas cheer to their joyless children — a delightfully cheesy cult holiday romp."},
+  {"id": 2001, "title": "Achhut Kanya", "language": "hi", "genres": ["Drama", "Romance"], "rating": 6.9, "year": 1936, "runtime": 74, "popularity": 96, "audio": ["Hindi"], "poster": "https://archive.org/services/img/achhut-kanya-1936-sd-640-480", "video": "https://archive.org/download/achhut-kanya-1936-sd-640-480/Achhut%20Kanya%20%281936%29%20SD%20640%20480.ia.mp4", "overview": "A landmark of early Hindi cinema: a doomed love story between a Brahmin boy and an untouchable girl that boldly challenged caste prejudice. Stars Ashok Kumar and Devika Rani."},
+  {"id": 2002, "title": "Dr. Kotnis Ki Amar Kahani", "language": "hi", "genres": ["Drama", "History"], "rating": 7.0, "year": 1946, "runtime": 120, "popularity": 90, "audio": ["Hindi"], "poster": "https://archive.org/services/img/senhor-doutor", "video": "https://archive.org/download/senhor-doutor/senhor%20doutor.ia.mp4", "overview": "The true story of Dr. Dwarkanath Kotnis, an Indian physician who travelled to China during the war to treat wounded soldiers. A V. Shantaram classic (with English subtitles)."},
+  {"id": 2003, "title": "Sant Tukaram", "language": "hi", "genres": ["Drama", "Musical"], "rating": 7.2, "year": 1936, "runtime": 131, "popularity": 84, "audio": ["Marathi"], "poster": "https://archive.org/services/img/sant-tukaram-1936_202604", "video": "https://archive.org/download/sant-tukaram-1936_202604/Sant_Tukaram_%281936%29.mp4", "overview": "The devotional life of the 17th-century poet-saint Tukaram — the first Indian film to win an award at the Venice Film Festival."},
+  {"id": 2004, "title": "Raja Harishchandra", "language": "hi", "genres": ["Drama", "History"], "rating": 7.0, "year": 1913, "runtime": 40, "popularity": 78, "audio": ["Silent"], "poster": "https://archive.org/services/img/RajaHarishchandra1913", "video": "https://archive.org/download/RajaHarishchandra1913/raja-harishchandra-1913.mp4", "overview": "India's very first full-length feature film: the legend of the truthful King Harishchandra, who sacrifices his kingdom, family and freedom to keep his word."},
+  {"id": 2005, "title": "Mahatma Gandhi: Pilgrim of Peace", "language": "en", "genres": ["Documentary", "History", "Drama"], "rating": 7.0, "year": 2005, "runtime": 90, "popularity": 64, "audio": ["English"], "poster": "https://archive.org/services/img/MahatmaGandhi-PilgrimOfPeace", "video": "https://archive.org/download/MahatmaGandhi-PilgrimOfPeace/Gandhi-PilgrimOfPeace_512kb.mp4", "overview": "A documentary portrait of Mohandas Karamchand Gandhi — his philosophy of non-violence and the freedom struggle that inspired the world."},
+  {"id": 2101, "title": "Awaara", "language": "hi", "genres": ["Drama", "Romance", "Crime"], "rating": 8.0, "year": 1951, "runtime": 193, "popularity": 98, "audio": ["Hindi"], "poster": "https://archive.org/services/img/AwaaraVOSERajKapoor1951", "video": "https://archive.org/download/AwaaraVOSERajKapoor1951/Awaara%20%28VOSE%20Raj%20Kapoor%2C%201951%29.mp4", "overview": "A judge's abandoned son, raised in poverty by a criminal, grows up to fall in love with the daughter of the very man who cast out his mother. Raj Kapoor's landmark social drama."},
+  {"id": 2102, "title": "Shree 420", "language": "hi", "genres": ["Comedy", "Drama", "Romance"], "rating": 8.0, "year": 1955, "runtime": 168, "popularity": 97, "audio": ["Hindi"], "poster": "https://archive.org/services/img/shree-420-1955-raj-kapoor", "video": "https://archive.org/download/shree-420-1955-raj-kapoor/Shree.420.1955.1080p.WEBRip.x264.AAC-%5BYTS.MX%5D.mp4", "overview": "A naive graduate arrives in Bombay with honesty as his only asset, only to be seduced by the glamour and corruption of the big city. Raj Kapoor's beloved classic."},
+  {"id": 2103, "title": "Pyaasa", "language": "hi", "genres": ["Drama", "Romance", "Musical"], "rating": 8.3, "year": 1957, "runtime": 153, "popularity": 95, "audio": ["Hindi"], "poster": "https://archive.org/services/img/pyaasa-1957-guru-dutt-hindi-dvd-rip-xvid-smeet", "video": "https://archive.org/download/pyaasa-1957-guru-dutt-hindi-dvd-rip-xvid-smeet/pyaasa%281957%29%5BGuru%20Dutt%5DHindi-DvdRip-Xvid%20_%20Smeet.mp4", "overview": "A struggling, unrecognized poet discovers that the world only values his work once it believes he is dead. Guru Dutt's haunting poetic masterpiece."},
+  {"id": 2104, "title": "Do Bigha Zamin", "language": "hi", "genres": ["Drama"], "rating": 8.2, "year": 1953, "runtime": 131, "popularity": 94, "audio": ["Hindi"], "poster": "https://archive.org/services/img/do.-bigha.-zamin.-1953.576p.-mubi.-web-dl.x-264", "video": "https://archive.org/download/do.-bigha.-zamin.-1953.576p.-mubi.-web-dl.x-264/Do.Bigha.Zamin.1953.576p.MUBI.WEB-DL.x264.mp4", "overview": "A poor farmer travels to Calcutta and pulls a rickshaw to save his two acres of land from a greedy landlord. Bimal Roy's neorealist masterpiece."},
+  {"id": 2105, "title": "Gunga Jumna", "language": "hi", "genres": ["Action", "Drama", "Crime"], "rating": 7.8, "year": 1961, "runtime": 148, "popularity": 93, "audio": ["Hindi"], "poster": "https://archive.org/services/img/gunga-jumna-1961", "video": "https://archive.org/download/gunga-jumna-1961/Gunga%20Jumna%20%281961%29.ia.mp4", "overview": "Two brothers on opposite sides of the law — one a dacoit, the other a policeman — are torn apart by fate in this dialect-defining Dilip Kumar epic."},
+  {"id": 2106, "title": "Madhumati", "language": "hi", "genres": ["Romance", "Mystery", "Drama"], "rating": 7.8, "year": 1958, "runtime": 165, "popularity": 92, "audio": ["Hindi"], "poster": "https://archive.org/services/img/madhumati-1958-bimal-roy-classic-hindi-film", "video": "https://archive.org/download/madhumati-1958-bimal-roy-classic-hindi-film/VTS_02_2.mp4", "overview": "An estate manager is haunted by visions of a past life and a lost love in Bimal Roy's atmospheric reincarnation classic, written by Ritwik Ghatak."},
+  {"id": 2107, "title": "Naya Daur", "language": "hi", "genres": ["Drama", "Musical"], "rating": 7.6, "year": 1957, "runtime": 173, "popularity": 91, "audio": ["Hindi"], "poster": "https://archive.org/services/img/naya-daur-1957-hindi..-black-white..-dv-drip.-480p.-x-264.-aac.-5.1.-esubs.-chapters.-by.juleyano", "video": "https://archive.org/download/naya-daur-1957-hindi..-black-white..-dv-drip.-480p.-x-264.-aac.-5.1.-esubs.-chapters.-by.juleyano/Naya%20Daur%20%281957%29%20Hindi.Colour.DvDRip.720p.%20x264.AAC.5.1.Arabic.ESubs.Chapters.BY.juleyano.mp4", "overview": "A village tonga driver races a bus to prove man can triumph over machine, uniting his community against industrial greed. Dilip Kumar stars."},
+  {"id": 2108, "title": "Sangam", "language": "hi", "genres": ["Drama", "Romance"], "rating": 7.3, "year": 1964, "runtime": 238, "popularity": 90, "audio": ["Hindi"], "poster": "https://archive.org/services/img/sangam-1964-hindi.-web.-hd.-rip.-720p.x-264.-aac.-arabic.-e.-sub.-by.juleyano", "video": "https://archive.org/download/sangam-1964-hindi.-web.-hd.-rip.-720p.x-264.-aac.-arabic.-e.-sub.-by.juleyano/Sangam%20%281964%29%20Hindi.%20WEB.HD.%20Rip.720p.x%20264.%20AAC.%20Arabic.E.Sub.%20BY.juleyano.mp4", "overview": "Two best friends love the same woman; when one believes the other has died, a love triangle of friendship, sacrifice and jealousy unfolds. Raj Kapoor's first colour film."},
+  {"id": 2109, "title": "Aan", "language": "hi", "genres": ["Action", "Adventure", "Romance"], "rating": 7.0, "year": 1952, "runtime": 130, "popularity": 89, "audio": ["Hindi"], "poster": "https://archive.org/services/img/aan-1952-the-savage-princess-1952-hindi.-dv-drip.-480p.x-264.-ac-3.-esubs.-chapters.-by-juleyano", "video": "https://archive.org/download/aan-1952-the-savage-princess-1952-hindi.-dv-drip.-480p.x-264.-ac-3.-esubs.-chapters.-by-juleyano/Aan%20%281952%29%20The%20Savage%20Princess%20%281952%29%20%20Hindi.DvDRip.480p.x264.AC3.Esubs.Chapters.BY%20Juleyano.mp4", "overview": "A spirited villager tames an arrogant princess and battles a tyrannical prince in India's first Technicolor spectacle, starring Dilip Kumar and Nadira."},
+  {"id": 2110, "title": "Taxi Driver", "language": "hi", "genres": ["Crime", "Drama", "Romance"], "rating": 7.2, "year": 1954, "runtime": 124, "popularity": 88, "audio": ["Hindi"], "poster": "https://archive.org/services/img/taxi-driver-1954-hindi.-dv-drip.-480p.-x-264-ac-3-5.1.-arabic.-esub.-chapters.-by.juleyano", "video": "https://archive.org/download/taxi-driver-1954-hindi.-dv-drip.-480p.-x-264-ac-3-5.1.-arabic.-esub.-chapters.-by.juleyano/Taxi%20Driver%20%281954%29%20Hindi.DvDRip.480p.%20x264%20AC3%205.1.Arabic.Esub.Chapters.BY.juleyano.mp4", "overview": "A carefree Bombay taxi driver gets entangled with a runaway singer and a gang of crooks in this breezy Dev Anand noir."},
+  {"id": 2111, "title": "Jagriti", "language": "hi", "genres": ["Drama", "Family"], "rating": 7.5, "year": 1954, "runtime": 132, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/jagriti-1954-satyen-bose-classic-hindi-film-filmistan-hemant-kumar-abhi-bhattacharya-kavi-pradeep", "video": "https://archive.org/download/jagriti-1954-satyen-bose-classic-hindi-film-filmistan-hemant-kumar-abhi-bhattacharya-kavi-pradeep/VTS_02_1.mp4", "overview": "A devoted teacher transforms a class of unruly boys through compassion and patriotism in this National Award-winning Filmistan classic."},
+  {"id": 2112, "title": "Sita Sings the Blues", "language": "hi", "genres": ["Animation", "Musical", "Comedy"], "rating": 8.0, "year": 2008, "runtime": 82, "popularity": 75, "audio": ["English"], "poster": "https://archive.org/services/img/Sita_Sings_the_Blues", "video": "https://archive.org/download/Sita_Sings_the_Blues/Sita_Sings_the_Blues.mp4", "overview": "The ancient Ramayana retold through the eyes of Sita and set to 1920s jazz — Nina Paley's award-winning, freely-licensed animated musical."},
+  {"id": 2201, "title": "Mother India", "language": "hi", "genres": ["Drama"], "rating": 8.0, "year": 1957, "runtime": null, "popularity": 80, "audio": ["Hindi"], "poster": "https://archive.org/services/img/mother-india-1957-hindi-classic-film", "video": "https://archive.org/download/mother-india-1957-hindi-classic-film/VTS_02_5.mp4", "overview": "An impoverished mother endures flood, famine and a rebellious son to uphold her honour — Mehboob Khan's epic, India's first Oscar-nominated film."},
+  {"id": 2202, "title": "Mughal-e-Azam", "language": "hi", "genres": ["Drama", "History", "Romance"], "rating": 8.2, "year": 1960, "runtime": null, "popularity": 82, "audio": ["Hindi"], "poster": "https://archive.org/services/img/mughal-e-azam-1960-black-white-full-movie", "video": "https://archive.org/download/mughal-e-azam-1960-black-white-full-movie/Mughal-E-Azam_%E0%A4%AE%E0%A5%81%E0%A4%97%E0%A4%BC%E0%A4%B2-%E0%A4%8F-%E0%A4%86%E0%A4%9C%E0%A4%BC%E0%A4%AE%20%281960%29%20_%20Black%20%26%20White%20full%20movie.mp4", "overview": "Prince Salim defies his father Emperor Akbar over his love for the courtesan Anarkali, in K. Asif's monumental Mughal romance."},
+  {"id": 2203, "title": "Andaz", "language": "hi", "genres": ["Drama", "Romance"], "rating": 7.3, "year": 1949, "runtime": null, "popularity": 73, "audio": ["Hindi"], "poster": "https://archive.org/services/img/andaz-1949-hindi.-webrip-x-264.-aac-lc.-arabic.-esub.-5.1.-by.juleyano", "video": "https://archive.org/download/andaz-1949-hindi.-webrip-x-264.-aac-lc.-arabic.-esub.-5.1.-by.juleyano/Andaz%20%281949%29%20Hindi.WEBRipX264.AAC%20LC.Arabic.ESub.5.1.By.juleyano.mp4", "overview": "A love triangle turns tragic when a woman's friendly affection is mistaken for love — Mehboob Khan's classic starring Dilip Kumar, Raj Kapoor and Nargis."},
+  {"id": 2204, "title": "Barsaat", "language": "hi", "genres": ["Drama", "Romance", "Musical"], "rating": 7.4, "year": 1949, "runtime": null, "popularity": 74, "audio": ["Hindi"], "poster": "https://archive.org/services/img/barsaat-1949-raj-kapoor-classic-hindi-film-nargis-dutt-nimmi-premnath", "video": "https://archive.org/download/barsaat-1949-raj-kapoor-classic-hindi-film-nargis-dutt-nimmi-premnath/VTS_02_5.mp4", "overview": "Two friends with very different ideas of love spend a fateful monsoon in the hills, in Raj Kapoor's breakthrough romantic musical."},
+  {"id": 2205, "title": "Baazi", "language": "hi", "genres": ["Crime", "Thriller", "Drama"], "rating": 7.4, "year": 1951, "runtime": null, "popularity": 74, "audio": ["Hindi"], "poster": "https://archive.org/services/img/baazi-1951-classic-hindi-film-dev-anand-kalpana-kartik-guru-dutt-k-n-singh-geeta-bali", "video": "https://archive.org/download/baazi-1951-classic-hindi-film-dev-anand-kalpana-kartik-guru-dutt-k-n-singh-geeta-bali/VTS_01_3.mp4", "overview": "A charming gambler is drawn into the criminal underworld to save his ailing sister — Guru Dutt's stylish debut, a milestone of Hindi noir."},
+  {"id": 2206, "title": "Devdas", "language": "hi", "genres": ["Drama", "Romance"], "rating": 7.7, "year": 1955, "runtime": null, "popularity": 77, "audio": ["Hindi"], "poster": "https://archive.org/services/img/devdas-1955-classic-hindi-film-bimal-roy-dilip-kumar-suchitra-sen-vyjayantimala-shemaroo-dvd", "video": "https://archive.org/download/devdas-1955-classic-hindi-film-bimal-roy-dilip-kumar-suchitra-sen-vyjayantimala-shemaroo-dvd/VTS_02_5.mp4", "overview": "Unable to marry his childhood love, a heartbroken young man drinks himself toward ruin in Bimal Roy's definitive adaptation of the Sarat Chandra classic."},
+  {"id": 2207, "title": "Boot Polish", "language": "hi", "genres": ["Drama", "Family"], "rating": 7.6, "year": 1954, "runtime": null, "popularity": 76, "audio": ["Hindi"], "poster": "https://archive.org/services/img/boot-polish-1954-hindi.-dv-drip.-480p.-xvi-d-ac-3.-arabic.-esubs.-5.1..-by-juleyano", "video": "https://archive.org/download/boot-polish-1954-hindi.-dv-drip.-480p.-xvi-d-ac-3.-arabic.-esubs.-5.1..-by-juleyano/Boot%20Polish%20%281954%29%20Hindi.Dv%20DRip.480p.XviD%2CAC3.Arabic.%20Esubs.5.1..%20BY%20Juleyano.mp4", "overview": "Two orphaned children refuse to beg and shine shoes to survive on the streets of Bombay — a tender Raj Kapoor production."},
+  {"id": 2208, "title": "Chori Chori", "language": "hi", "genres": ["Comedy", "Romance", "Musical"], "rating": 7.6, "year": 1956, "runtime": null, "popularity": 76, "audio": ["Hindi"], "poster": "https://archive.org/services/img/chori-chori-1956-raj-kapoor-nargis-classic-hindi-film", "video": "https://archive.org/download/chori-chori-1956-raj-kapoor-nargis-classic-hindi-film/VTS_01_2.mp4", "overview": "A runaway heiress and a wisecracking reporter fall in love on the road in this sparkling Raj Kapoor–Nargis musical remake of 'It Happened One Night.'"},
+  {"id": 2209, "title": "Mr. & Mrs. 55", "language": "hi", "genres": ["Comedy", "Romance"], "rating": 7.5, "year": 1955, "runtime": null, "popularity": 75, "audio": ["Hindi"], "poster": "https://archive.org/services/img/mr-mrs-55-1955-guru-dutt-madhubala-classic-hindi-film", "video": "https://archive.org/download/mr-mrs-55-1955-guru-dutt-madhubala-classic-hindi-film/VTS_03_3.mp4", "overview": "A penniless cartoonist enters a sham marriage with an heiress who must wed to claim her fortune — Guru Dutt's witty romantic comedy."},
+  {"id": 2210, "title": "C.I.D.", "language": "hi", "genres": ["Crime", "Thriller", "Mystery"], "rating": 7.4, "year": 1956, "runtime": null, "popularity": 74, "audio": ["Hindi"], "poster": "https://archive.org/services/img/cid-1956-classic-hindi-film-raj-khosla-dev-anand-waheedah-rehman-shakila-bir-shakuja-guru-dutt", "video": "https://archive.org/download/cid-1956-classic-hindi-film-raj-khosla-dev-anand-waheedah-rehman-shakila-bir-shakuja-guru-dutt/VTS_02_1.mp4", "overview": "A police detective hunts a killer while tangling with a glamorous moll in Raj Khosla's slick Bombay crime thriller, starring Dev Anand."},
+  {"id": 2211, "title": "Howrah Bridge", "language": "hi", "genres": ["Crime", "Thriller", "Musical"], "rating": 7.3, "year": 1958, "runtime": null, "popularity": 73, "audio": ["Hindi"], "poster": "https://archive.org/services/img/howrah-bridge-1958-hindi", "video": "https://archive.org/download/howrah-bridge-1958-hindi/VTS_09_2.mp4", "overview": "A man comes to Calcutta to avenge his brother's murder and recover a stolen family heirloom, amid cabaret nightclubs and smugglers."},
+  {"id": 2212, "title": "Kaagaz Ke Phool", "language": "hi", "genres": ["Drama", "Romance"], "rating": 7.9, "year": 1959, "runtime": null, "popularity": 79, "audio": ["Hindi"], "poster": "https://archive.org/services/img/kagaz-ke-phool", "video": "https://archive.org/download/kagaz-ke-phool/VTS_01_1.mp4", "overview": "A celebrated film director's life unravels as fame fades and love slips away — Guru Dutt's hauntingly beautiful, autobiographical masterpiece."},
+  {"id": 2213, "title": "Nau Do Gyarah", "language": "hi", "genres": ["Comedy", "Crime", "Romance"], "rating": 7.2, "year": 1957, "runtime": null, "popularity": 72, "audio": ["Hindi"], "poster": "https://archive.org/services/img/nau-do-gyarah", "video": "https://archive.org/download/nau-do-gyarah/VTS_01_4.mp4", "overview": "A young man on a road trip to claim his inheritance picks up a runaway bride and stumbles into a murder mystery. A breezy Dev Anand caper."},
+  {"id": 2214, "title": "Munimji", "language": "hi", "genres": ["Drama", "Romance"], "rating": 7.0, "year": 1955, "runtime": null, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/Munimji", "video": "https://archive.org/download/Munimji/VTS_01_5.mp4", "overview": "Separated brothers, hidden identities and romance collide in this entertaining Dev Anand–Nalini Jaywant musical drama."},
+  {"id": 2215, "title": "Funtoosh", "language": "hi", "genres": ["Comedy", "Drama"], "rating": 6.9, "year": 1956, "runtime": null, "popularity": 69, "audio": ["Hindi"], "poster": "https://archive.org/services/img/funtoosh-1956-hindi.-dv-drip.-480p.x-264.-aac.-ex-dt-by.juleyano", "video": "https://archive.org/download/funtoosh-1956-hindi.-dv-drip.-480p.x-264.-aac.-ex-dt-by.juleyano/Tere%20Ghar%20Ke%20Samne%20%281963%29%20Hindi.DvDRip.480p.x264.AAC.5.1.Chapters.BY%20Juleyano.ia.mp4", "overview": "A man declared insane is insured for a fortune by a schemer who plans his death — then everything goes comically wrong. Dev Anand stars."},
+  {"id": 2216, "title": "Kala Pani", "language": "hi", "genres": ["Crime", "Drama", "Mystery"], "rating": 7.4, "year": 1958, "runtime": null, "popularity": 74, "audio": ["Hindi"], "poster": "https://archive.org/services/img/kalapani-1958-dev-anand-madhubala-nalini-jaywant-raj-khosla-classic-hindi-film", "video": "https://archive.org/download/kalapani-1958-dev-anand-madhubala-nalini-jaywant-raj-khosla-classic-hindi-film/VTS_01_2.mp4", "overview": "A young man works to clear his imprisoned father's name, falling for a journalist as he uncovers the truth. Dev Anand in an acclaimed mystery."},
+  {"id": 2217, "title": "Kala Bazar", "language": "hi", "genres": ["Crime", "Drama", "Romance"], "rating": 7.4, "year": 1960, "runtime": null, "popularity": 74, "audio": ["Hindi"], "poster": "https://archive.org/services/img/kala-bazar-1960-hindi.-web.-rip.-amazon.-480p.x-264.-aac.-esub..-by-juleyano", "video": "https://archive.org/download/kala-bazar-1960-hindi.-web.-rip.-amazon.-480p.x-264.-aac.-esub..-by-juleyano/Kala%20Bazar%20%281960%29%20Hindi.WEB.Rip.Amazon.480p.x264.AAC.ESub..%20BY%20juleyano.ia.mp4", "overview": "A cinema black-marketeer selling tickets in the underworld finds his conscience — and love — pulling him toward honesty. Dev Anand stars."},
+  {"id": 2218, "title": "Hum Dono", "language": "hi", "genres": ["Drama", "Romance", "War"], "rating": 7.7, "year": 1961, "runtime": null, "popularity": 77, "audio": ["Hindi"], "poster": "https://archive.org/services/img/hum-dono_202202", "video": "https://archive.org/download/hum-dono_202202/VTS_02_2.mp4", "overview": "Two soldiers who look identical cross paths at war, and one must face the other's grieving family. A poignant Dev Anand double-role classic."},
+  {"id": 2219, "title": "Tere Ghar Ke Samne", "language": "hi", "genres": ["Comedy", "Romance"], "rating": 7.2, "year": 1963, "runtime": null, "popularity": 72, "audio": ["Hindi"], "poster": "https://archive.org/services/img/tere-ghar-ke-samne-1963-classic-hindi-film-dev-anand-nutan", "video": "https://archive.org/download/tere-ghar-ke-samne-1963-classic-hindi-film-dev-anand-nutan/VTS_02_3.mp4", "overview": "An architect falls for the daughter of his father's business rival, building two houses and one romance. A charming Dev Anand–Nutan comedy."},
+  {"id": 2220, "title": "Sahib Bibi Aur Ghulam", "language": "hi", "genres": ["Drama", "Romance"], "rating": 8.2, "year": 1962, "runtime": null, "popularity": 82, "audio": ["Hindi"], "poster": "https://archive.org/services/img/sahib-bibi-aur-ghulam-1962-classic-hindi-film", "video": "https://archive.org/download/sahib-bibi-aur-ghulam-1962-classic-hindi-film/VTS_01_4.mp4", "overview": "The lonely wife of a decadent aristocrat befriends a humble worker as her feudal world crumbles — Guru Dutt's elegant, tragic masterpiece."},
+  {"id": 2221, "title": "Kabuliwala", "language": "hi", "genres": ["Drama"], "rating": 7.8, "year": 1961, "runtime": null, "popularity": 78, "audio": ["Hindi"], "poster": "https://archive.org/services/img/kabuliwala-balraj-sahni-usha-kiran", "video": "https://archive.org/download/kabuliwala-balraj-sahni-usha-kiran/Kabuliwala%20-%20Balraj%20Sahni%2C%20Usha%20Kiran.mp4", "overview": "A Pathan fruit-seller in Calcutta befriends a little girl who reminds him of the daughter he left behind in Afghanistan. Tagore's beloved tale."},
+  {"id": 2222, "title": "Chaudhvin Ka Chand", "language": "hi", "genres": ["Drama", "Romance", "Musical"], "rating": 7.5, "year": 1960, "runtime": null, "popularity": 75, "audio": ["Hindi"], "poster": "https://archive.org/services/img/chaudhvin-ka-chand", "video": "https://archive.org/download/chaudhvin-ka-chand/VTS_01_4.mp4", "overview": "Two friends unknowingly love the same veiled woman, with tender and tragic consequences, in this lyrical Guru Dutt Muslim social."},
+  {"id": 2223, "title": "Anuradha", "language": "hi", "genres": ["Drama", "Romance", "Musical"], "rating": 7.6, "year": 1960, "runtime": null, "popularity": 76, "audio": ["Hindi"], "poster": "https://archive.org/services/img/anuradha-1960-classic-hindi-film-hrishikesh-mukherjee-leela-naidu-balraj-sahni", "video": "https://archive.org/download/anuradha-1960-classic-hindi-film-hrishikesh-mukherjee-leela-naidu-balraj-sahni/VTS_01_4.mp4", "overview": "A gifted singer sacrifices her career for marriage to a dedicated rural doctor, then questions her choices. Hrishikesh Mukherjee's sensitive drama."},
+  {"id": 2224, "title": "Professor", "language": "hi", "genres": ["Comedy", "Romance"], "rating": 7.0, "year": 1962, "runtime": null, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/professor_202202", "video": "https://archive.org/download/professor_202202/VTS_02_6.mp4", "overview": "A young man disguises himself as an elderly tutor to support his ailing mother — and falls for his strict employer's niece. A Shammi Kapoor comedy."},
+  {"id": 2225, "title": "China Town", "language": "hi", "genres": ["Crime", "Thriller", "Musical"], "rating": 6.8, "year": 1962, "runtime": null, "popularity": 68, "audio": ["Hindi"], "poster": "https://archive.org/services/img/china-town-1962-hindi.-dv-drip.-480p.x-264.-aac..-esubs.-5.1.-bw-torrents.-rus.-by.-juleyano", "video": "https://archive.org/download/china-town-1962-hindi.-dv-drip.-480p.x-264.-aac..-esubs.-5.1.-bw-torrents.-rus.-by.-juleyano/China%20Town%20%281962%29%20Hindi.DvDRip.480p.x264.AAC..Esubs.5.1.BwTorrents.Rus.By.Juleyano.mp4", "overview": "A nightclub singer is recruited to impersonate his criminal lookalike to bust a smuggling ring. A stylish Shammi Kapoor double-role thriller."},
+  {"id": 2226, "title": "Bees Saal Baad", "language": "hi", "genres": ["Horror", "Mystery", "Thriller"], "rating": 7.6, "year": 1962, "runtime": null, "popularity": 76, "audio": ["Hindi"], "poster": "https://archive.org/services/img/bees-saal-baad-1962-hindi.-dv-drip.-480p.x-264.-aac.-esubs.-5.1..-chapters.-by-juleyano", "video": "https://archive.org/download/bees-saal-baad-1962-hindi.-dv-drip.-480p.x-264.-aac.-esubs.-5.1..-chapters.-by-juleyano/Bees%20Saal%20Baad%20%281962%29%20Hindi.DvDRip.480p.x264.AAC.ESubs.5.1..Chapters.BY%20Juleyano.mp4", "overview": "A nobleman returning to his ancestral haveli is stalked by a vengeful spirit tied to a twenty-year-old murder. A landmark Hindi horror mystery."},
+  {"id": 2227, "title": "Mere Mehboob", "language": "hi", "genres": ["Drama", "Romance", "Musical"], "rating": 7.3, "year": 1963, "runtime": null, "popularity": 73, "audio": ["Hindi"], "poster": "https://archive.org/services/img/mere-mehboob-1963-hindi.-dv-drip.-480p.x-264.-ac-3..-eng.-sub.-chapters.-phantom-by.juleyano", "video": "https://archive.org/download/mere-mehboob-1963-hindi.-dv-drip.-480p.x-264.-ac-3..-eng.-sub.-chapters.-phantom-by.juleyano/Mere%20Mehboob%20%281963%29%20Hindi.DvDRip.480p.x264.AC3..Eng.Sub.Chapters.%20%5BPhantom%5D%20BY.juleyano.mp4", "overview": "Two lovers separated by circumstance search for each other in old Lucknow, in this opulent Muslim-social musical romance."},
+  {"id": 2228, "title": "Woh Kaun Thi", "language": "hi", "genres": ["Mystery", "Thriller", "Romance"], "rating": 7.8, "year": 1964, "runtime": null, "popularity": 78, "audio": ["Hindi"], "poster": "https://archive.org/services/img/woh-kaun-thi", "video": "https://archive.org/download/woh-kaun-thi/VTS_01_5.mp4", "overview": "A doctor is haunted by a mysterious woman in white who seems to predict death — Raj Khosla's eerie suspense classic with unforgettable songs."},
+  {"id": 2229, "title": "Kohraa", "language": "hi", "genres": ["Horror", "Mystery", "Thriller"], "rating": 7.5, "year": 1964, "runtime": null, "popularity": 75, "audio": ["Hindi"], "poster": "https://archive.org/services/img/kohraa-1964-hindi.-1-cd.-dv-drip.-480p.x-264.-ac-3.-esub.-dude-lu-ci-fe-r-ex-dt.-by.juleyano", "video": "https://archive.org/download/kohraa-1964-hindi.-1-cd.-dv-drip.-480p.x-264.-ac-3.-esub.-dude-lu-ci-fe-r-ex-dt.-by.juleyano/Kohraa%20%281964%29%20Hindi.1CD.DvDRip.480p.x264.AC3.Esub.%5BDudeLuCiFeR%5D%20%5BExDT%5D.BY.juleyano.mp4", "overview": "A new bride at a brooding mansion is tormented by the ghostly presence of her husband's late first wife. A gothic Hindi reworking of 'Rebecca.'"},
+  {"id": 2230, "title": "Aar Paar", "language": "hi", "genres": ["Crime", "Comedy", "Musical"], "rating": 7.5, "year": 1954, "runtime": null, "popularity": 75, "audio": ["Hindi"], "poster": "https://archive.org/services/img/aar-paar-1954-guru-dutt-classic-hindi-film-shyama-jagdish-sethi-johnny-walker", "video": "https://archive.org/download/aar-paar-1954-guru-dutt-classic-hindi-film-shyama-jagdish-sethi-johnny-walker/VTS_02_2.mp4", "overview": "A roguish taxi driver romances a garage owner's daughter and gets caught up with crooks, in Guru Dutt's snappy, song-filled crime comedy."},
+  {"id": 2231, "title": "Baiju Bawra", "language": "hi", "genres": ["Drama", "Musical", "Romance"], "rating": 7.6, "year": 1952, "runtime": null, "popularity": 76, "audio": ["Hindi"], "poster": "https://archive.org/services/img/BaijuBawra1952", "video": "https://archive.org/download/BaijuBawra1952/Baiju%20Bawra%20%281952%29%20Meena%20Kumari%2C%20Bharat%20Bhushan.mp4", "overview": "A musician trains for years to defeat the emperor's court singer Tansen and avenge his father, in this classical-music romantic epic."},
+  {"id": 2232, "title": "Albela", "language": "hi", "genres": ["Comedy", "Musical", "Romance"], "rating": 7.0, "year": 1951, "runtime": null, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/albela-1951-classic-hindi-film-bhagwan-dada-geeta-bali", "video": "https://archive.org/download/albela-1951-classic-hindi-film-bhagwan-dada-geeta-bali/VTS_01_1.mp4", "overview": "A stage-struck young man chases showbiz dreams with the help of a famous actress, in this hugely popular musical comedy."},
+  {"id": 2233, "title": "Anarkali", "language": "hi", "genres": ["Drama", "History", "Romance"], "rating": 7.0, "year": 1953, "runtime": null, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/anarkali-1953-filmistan-hindi-classic", "video": "https://archive.org/download/anarkali-1953-filmistan-hindi-classic/VTS_01_5.mp4", "overview": "The doomed love of a court dancer and the Mughal prince Salim, defied by Emperor Akbar — a lavish historical romance."},
+  {"id": 2234, "title": "Jagte Raho", "language": "hi", "genres": ["Drama", "Comedy"], "rating": 8.0, "year": 1956, "runtime": null, "popularity": 80, "audio": ["Hindi"], "poster": "https://archive.org/services/img/jagte-raho-1956-hindi..-dv-drip.-480p.-x-264.-ac-3-.-esubs.-5.1.-chapters.-by-juleyano", "video": "https://archive.org/download/jagte-raho-1956-hindi..-dv-drip.-480p.-x-264.-ac-3-.-esubs.-5.1.-chapters.-by-juleyano/Jagte%20Raho%20%281956%29%20Hindi..DvDRip.480p.X264.AC3%20.ESubs.5.1.Chapters.BY%20Juleyano.mp4", "overview": "A thirsty villager wanders into a city apartment block at night and exposes the hypocrisy of its 'respectable' residents. Raj Kapoor's biting fable."},
+  {"id": 2235, "title": "Jhanak Jhanak Payal Baaje", "language": "hi", "genres": ["Drama", "Musical", "Romance"], "rating": 7.3, "year": 1955, "runtime": null, "popularity": 73, "audio": ["Hindi"], "poster": "https://archive.org/services/img/jhanak-jhanak-payal-baaje", "video": "https://archive.org/download/jhanak-jhanak-payal-baaje/JHANAK_JHANAK_PAYAL_BAAJE.mp4", "overview": "A classical dancer and a young woman find love through art against her family's wishes, in V. Shantaram's pioneering colour dance film."},
+  {"id": 2236, "title": "Jhumroo", "language": "hi", "genres": ["Comedy", "Musical", "Romance"], "rating": 7.0, "year": 1961, "runtime": null, "popularity": 70, "audio": ["Hindi"], "poster": "https://archive.org/services/img/jhumroo-1961-classic-hindi-film-kishore-kumar-madhubala-shanker-mukerji", "video": "https://archive.org/download/jhumroo-1961-classic-hindi-film-kishore-kumar-madhubala-shanker-mukerji/VTS_01_4.mp4", "overview": "A carefree hill-country youth uncovers family secrets and finds romance, in this Kishore Kumar musical comedy he also composed."},
+  {"id": 2237, "title": "Patita", "language": "hi", "genres": ["Drama", "Romance"], "rating": 6.8, "year": 1953, "runtime": null, "popularity": 68, "audio": ["Hindi"], "poster": "https://archive.org/services/img/patita-1953-hindi.-web.-dl.-720p.-zee-5.x-264.-aac.-5.1.-esubs.-by.juleyano", "video": "https://archive.org/download/patita-1953-hindi.-web.-dl.-720p.-zee-5.x-264.-aac.-5.1.-esubs.-by.juleyano/Patita%20%281953%29%20Hindi.WEB.DL.720p.ZEE5.x264.AAC.5.1.ESubs.BY.juleyano.mp4", "overview": "A man falls in love with a woman shunned by society for her past, and must overcome his own prejudice. A socially conscious Dev Anand drama."},
+  {"id": 2238, "title": "Insaan Jaag Utha", "language": "hi", "genres": ["Drama", "Crime"], "rating": 6.8, "year": 1959, "runtime": null, "popularity": 68, "audio": ["Hindi"], "poster": "https://archive.org/services/img/insaan-jaag-utha-1959-hindi.-webrip.-480p.-x-264.-aac..-arabic.-esubs.-by.juleyano", "video": "https://archive.org/download/insaan-jaag-utha-1959-hindi.-webrip.-480p.-x-264.-aac..-arabic.-esubs.-by.juleyano/Insaan%20Jaag%20Utha%20%281959%29%20Hindi.NTSC.DvDRip.480p.%20x264.AAC..BY.juleyano.mp4", "overview": "Workers at a dam site confront a fugitive and their own fears, in this Bimal Roy-produced drama starring Sunil Dutt and Madhubala."},
+  {"id": 2239, "title": "Pather Panchali", "language": "hi", "genres": ["Drama"], "rating": 8.3, "year": 1955, "runtime": null, "popularity": 83, "audio": ["Bengali"], "poster": "https://archive.org/services/img/PatherPanchali1955720p", "video": "https://archive.org/download/PatherPanchali1955720p/Pather%20Panchali%20%281955%29%20%5B720p%5D.mp4", "overview": "In a Bengal village, a poor family's children Apu and Durga discover wonder and sorrow — Satyajit Ray's transcendent debut and world-cinema landmark."},
+  {"id": 2240, "title": "Aparajito", "language": "hi", "genres": ["Drama"], "rating": 8.1, "year": 1956, "runtime": null, "popularity": 81, "audio": ["Bengali"], "poster": "https://archive.org/services/img/Aparajito1956720p", "video": "https://archive.org/download/Aparajito1956720p/Aparajito%20%281956%29%20%5B720p%5D.mp4", "overview": "The second chapter of the Apu trilogy follows the boy's coming of age and his bond with his mother as he leaves the village for the city."},
+  {"id": 2241, "title": "Jalsaghar", "language": "hi", "genres": ["Drama", "Musical"], "rating": 8.0, "year": 1958, "runtime": null, "popularity": 80, "audio": ["Bengali"], "poster": "https://archive.org/services/img/jalsaghar-the-music-room-1958_202209", "video": "https://archive.org/download/jalsaghar-the-music-room-1958_202209/VTS_01_0.mp4", "overview": "A decaying aristocrat clings to his passion for music, hosting one last extravagant concert in his crumbling mansion. Ray's elegiac chamber piece."},
+  {"id": 2242, "title": "Devi", "language": "hi", "genres": ["Drama"], "rating": 7.9, "year": 1960, "runtime": null, "popularity": 79, "audio": ["Bengali"], "poster": "https://archive.org/services/img/devi_20201207", "video": "https://archive.org/download/devi_20201207/Devi.mp4", "overview": "A young woman is declared a living goddess by her devout father-in-law, with devastating results, in Satyajit Ray's searching critique of faith."},
+  {"id": 2243, "title": "Charulata", "language": "hi", "genres": ["Drama", "Romance"], "rating": 8.2, "year": 1964, "runtime": null, "popularity": 82, "audio": ["Bengali"], "poster": "https://archive.org/services/img/charulata-1964-720p", "video": "https://archive.org/download/charulata-1964-720p/Charulata%20%281964%29%20%5B720p%5D.mp4", "overview": "A lonely, intelligent wife in 19th-century Bengal grows close to her husband's cousin, in Satyajit Ray's exquisitely tender masterpiece."},
+  {"id": 2244, "title": "Parash Pathar", "language": "hi", "genres": ["Comedy", "Fantasy"], "rating": 7.6, "year": 1958, "runtime": null, "popularity": 76, "audio": ["Bengali"], "poster": "https://archive.org/services/img/parashpathar1958", "video": "https://archive.org/download/parashpathar1958/VTS_02_3.mp4", "overview": "A mild clerk finds a stone that turns metal to gold and discovers riches bring chaos, in Satyajit Ray's delightful satirical comedy."},
+  {"id": 2245, "title": "Mayabazar", "language": "hi", "genres": ["Fantasy", "Drama", "Mythology"], "rating": 8.6, "year": 1957, "runtime": null, "popularity": 86, "audio": ["Telugu"], "poster": "https://archive.org/services/img/mayabazar-1957-1080p-hq-bluray-x-264-avc-telugu-dd-5", "video": "https://archive.org/download/mayabazar-1957-1080p-hq-bluray-x-264-avc-telugu-dd-5/Mayabazar_1957_1080p_HQ_BLURAY_x264_AVC_Telugu_DD%2B_5.mp4", "overview": "Krishna and Ghatotkacha use illusion and wit to unite young lovers against scheming relatives — the most beloved fantasy of Indian cinema."},
+  {"id": 2246, "title": "Parasakthi", "language": "hi", "genres": ["Drama"], "rating": 7.8, "year": 1952, "runtime": null, "popularity": 78, "audio": ["Tamil"], "poster": "https://archive.org/services/img/sivajimovies-parasakthi-1952", "video": "https://archive.org/download/sivajimovies-parasakthi-1952/%40SIVAJIMOVIES%20Parasakthi%201952.mp4", "overview": "A family is torn apart by poverty and injustice, in a fiery social drama that launched Sivaji Ganesan and shook Tamil cinema."},
+  {"id": 1101, "title": "Scarlet Street", "language": "en", "genres": ["Crime", "Thriller", "Drama"], "rating": 7.8, "year": 1945, "runtime": 102, "popularity": 56, "audio": ["English"], "poster": "https://archive.org/services/img/ScarletStreet", "video": "https://archive.org/download/ScarletStreet/Scarlet_Street.mp4", "overview": "A meek cashier is manipulated by a femme fatale and her schemer boyfriend into a spiral of fraud and murder. Fritz Lang's pitch-black noir."},
+  {"id": 1102, "title": "Meet John Doe", "language": "en", "genres": ["Drama", "Comedy", "Romance"], "rating": 7.6, "year": 1941, "runtime": 122, "popularity": 55, "audio": ["English"], "poster": "https://archive.org/services/img/meet_john_doe", "video": "https://archive.org/download/meet_john_doe/meet_john_doe.mp4", "overview": "A newspaper invents a folk hero who threatens to take his own life in protest of society's ills — until the man hired to play him is swept up in the movement. Frank Capra directs."},
+  {"id": 1103, "title": "Horror Express", "language": "en", "genres": ["Horror", "Sci-Fi", "Thriller"], "rating": 6.7, "year": 1972, "runtime": 88, "popularity": 54, "audio": ["English"], "poster": "https://archive.org/services/img/Horror_Express", "video": "https://archive.org/download/Horror_Express/Horror_Express.mp4", "overview": "Aboard the Trans-Siberian Express, scientists discover a frozen creature whose deadly secret begins killing the passengers. Christopher Lee and Peter Cushing star."},
+  {"id": 1104, "title": "Impact", "language": "en", "genres": ["Crime", "Thriller", "Drama"], "rating": 6.9, "year": 1949, "runtime": 111, "popularity": 53, "audio": ["English"], "poster": "https://archive.org/services/img/impact", "video": "https://archive.org/download/impact/impact.mp4", "overview": "Left for dead by his cheating wife's murder plot, a businessman quietly builds a new life — and a case for revenge. A twisty 1949 film noir."},
+  {"id": 1105, "title": "Quicksand", "language": "en", "genres": ["Crime", "Thriller"], "rating": 6.5, "year": 1950, "runtime": 79, "popularity": 52, "audio": ["English"], "poster": "https://archive.org/services/img/Quicksand_clear", "video": "https://archive.org/download/Quicksand_clear/Quicksand.mp4", "overview": "A car mechanic borrows twenty dollars and tumbles into a nightmare of blackmail and crime. Mickey Rooney stars in this tense film noir."},
+  {"id": 1106, "title": "Royal Wedding", "language": "en", "genres": ["Comedy", "Romance", "Musical"], "rating": 6.8, "year": 1951, "runtime": 93, "popularity": 51, "audio": ["English"], "poster": "https://archive.org/services/img/royal_wedding", "video": "https://archive.org/download/royal_wedding/royal_wedding.mp4", "overview": "A brother-and-sister dance act finds romance in London during the royal wedding of 1947 — featuring Fred Astaire's famous dancing-on-the-ceiling number."},
+  {"id": 1107, "title": "The Ghoul", "language": "en", "genres": ["Horror", "Thriller"], "rating": 6.2, "year": 1933, "runtime": 79, "popularity": 50, "audio": ["English"], "poster": "https://archive.org/services/img/TheGhoul", "video": "https://archive.org/download/TheGhoul/TheGhoul_1933.mp4", "overview": "An Egyptologist returns from the grave to take vengeance on those who stole his sacred jewel. Boris Karloff stars in this gothic British chiller."},
+  {"id": 1108, "title": "Inner Sanctum", "language": "en", "genres": ["Thriller", "Horror"], "rating": 5.8, "year": 1948, "runtime": 62, "popularity": 49, "audio": ["English"], "poster": "https://archive.org/services/img/Inner_Sanctum_movie", "video": "https://archive.org/download/Inner_Sanctum_movie/Inner_Sanctum.mp4", "overview": "A man who pushes a woman to her death is trapped at a remote railway boarding house as suspicion closes in. A moody poverty-row thriller."},
+  {"id": 1109, "title": "Charlie Chaplin Festival", "language": "en", "genres": ["Comedy"], "rating": 7.5, "year": 1938, "runtime": 60, "popularity": 48, "audio": ["Silent"], "poster": "https://archive.org/services/img/charlie_chaplin_film_fest", "video": "https://archive.org/download/charlie_chaplin_film_fest/charlie_chaplin_film_fest.mp4", "overview": "A collection of Charlie Chaplin's classic silent comedy shorts — the Little Tramp at his slapstick best."},
+  {"id": 1110, "title": "The Gun and the Pulpit", "language": "en", "genres": ["Western", "Action"], "rating": 5.5, "year": 1974, "runtime": 74, "popularity": 47, "audio": ["English"], "poster": "https://archive.org/services/img/cco_thegunandthepulpit", "video": "https://archive.org/download/cco_thegunandthepulpit/ccoPublicDomainThe_Gun_and_the_Pulpit.mp4", "overview": "A wanted gunslinger poses as a preacher in a town terrorized by a land baron — and decides to fight back. A breezy TV-movie Western."},
+  {"id": 1111, "title": "The Fast and the Furious", "language": "en", "genres": ["Action", "Crime", "Thriller"], "rating": 5.3, "year": 1955, "runtime": 73, "popularity": 46, "audio": ["English"], "poster": "https://archive.org/services/img/TheFastandtheFuriousJohnIreland1954goofyrip", "video": "https://archive.org/download/TheFastandtheFuriousJohnIreland1954goofyrip/TheFastandtheFuriousJohnIreland1954goofyrip.mp4", "overview": "A man wrongly accused of murder takes a woman hostage and enters a cross-border sports-car race to escape the police. The Roger Corman original."},
+  {"id": 1112, "title": "Teenagers from Outer Space", "language": "en", "genres": ["Sci-Fi", "Horror"], "rating": 4.2, "year": 1959, "runtime": 86, "popularity": 45, "audio": ["English"], "poster": "https://archive.org/services/img/teenagers_from_outerspace", "video": "https://archive.org/download/teenagers_from_outerspace/Teenagers_from_Outer_Space.mp4", "overview": "An alien scout rebels against his people's plan to farm giant monsters on Earth, falling for a local girl. Endearingly cheap 1950s sci-fi."},
+  {"id": 1113, "title": "Killers from Space", "language": "en", "genres": ["Sci-Fi", "Horror"], "rating": 4.0, "year": 1954, "runtime": 71, "popularity": 44, "audio": ["English"], "poster": "https://archive.org/services/img/Killers_from_space", "video": "https://archive.org/download/Killers_from_space/Killers_from_space.mp4", "overview": "A scientist survives a plane crash only to be controlled by bug-eyed aliens plotting to conquer Earth. Peter Graves stars in this atomic-age B-movie."},
+  {"id": 1114, "title": "Voyage to the Planet of Prehistoric Women", "language": "en", "genres": ["Sci-Fi", "Adventure"], "rating": 3.8, "year": 1968, "runtime": 78, "popularity": 43, "audio": ["English"], "poster": "https://archive.org/services/img/VoyagetothePlanetofPrehistoricWomen", "video": "https://archive.org/download/VoyagetothePlanetofPrehistoricWomen/VoyagetothePlanetofPrehistoricWomen.mp4", "overview": "Astronauts land on Venus and encounter telepathic alien women and prehistoric beasts in this gloriously strange cult sci-fi."},
+  {"id": 1115, "title": "Return of the Kung Fu Dragon", "language": "en", "genres": ["Action", "Adventure", "Fantasy"], "rating": 4.5, "year": 1976, "runtime": 90, "popularity": 42, "audio": ["English"], "poster": "https://archive.org/services/img/Return_of_the_Kung_Fu_Dragon", "video": "https://archive.org/download/Return_of_the_Kung_Fu_Dragon/Return_of_the_Kung_Fu_Dragon.mp4", "overview": "When a kingdom falls to a tyrant, a lost princess and a band of martial artists rise to reclaim it in this colourful kung-fu fantasy."},
+  {"id": 1116, "title": "War of the Robots", "language": "en", "genres": ["Sci-Fi", "Adventure"], "rating": 3.5, "year": 1978, "runtime": 99, "popularity": 41, "audio": ["English"], "poster": "https://archive.org/services/img/WarOfTheRobots", "video": "https://archive.org/download/WarOfTheRobots/WarOfTheRobots1978.mp4", "overview": "Alien androids abduct two scientists and a spaceship crew gives chase across the galaxy in this Italian space-opera romp."}
+];
+const ROWS = [
+  {name:"Trending Now", fn:list=>[...list].sort((a,b)=>b.popularity-a.popularity)},
+  {name:"Indian Classics", fn:list=>list.filter(x=>x.language==="hi")},
+  {name:"Hollywood Classics", fn:list=>list.filter(x=>x.language==="en")},
+  {name:"Horror", fn:list=>list.filter(x=>x.genres.includes("Horror"))},
+  {name:"Comedy", fn:list=>list.filter(x=>x.genres.includes("Comedy"))},
+  {name:"Sci-Fi", fn:list=>list.filter(x=>x.genres.includes("Sci-Fi"))},
+  {name:"Thriller & Noir", fn:list=>list.filter(x=>x.genres.includes("Thriller"))},
+  {name:"Drama", fn:list=>list.filter(x=>x.genres.includes("Drama"))},
+];
+
+/* ---------- helpers ---------- */
+const $ = s=>document.querySelector(s);
+function gradientFor(t=""){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))%360;
+  return `linear-gradient(145deg,hsl(${h} 55% 18%),hsl(${(h+40)%360} 60% 8%))`;}
+function esc(s=""){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmtRuntime(r){return r?`${Math.floor(r/60)}h ${r%60}m`:"";}
+const byId = id=>MOVIES.find(x=>x.id===Number(id));
+
+/* ---------- watchlist (localStorage) ---------- */
+function getWL(){try{return JSON.parse(localStorage.getItem("mm_watchlist")||"[]")}catch(e){return[]}}
+function setWL(a){localStorage.setItem("mm_watchlist",JSON.stringify(a))}
+function isSaved(id){return getWL().includes(Number(id))}
+function toggleWL(id){id=Number(id);let a=getWL();a.includes(id)?a=a.filter(x=>x!==id):a.push(id);setWL(a);
+  render(); if($("#modal").classList.contains("open")) openDetails(currentId,true);}
+
+/* ---------- card ---------- */
+function cardHTML(x){
+  const saved=isSaved(x.id);
+  return `<div class="card" onclick="openDetails(${x.id})">
+    <div class="fallback" style="background:${gradientFor(x.title)}">${esc(x.title)}</div>
+    <img src="${x.poster}" alt="${esc(x.title)}" loading="lazy" onerror="this.style.display='none'"/>
+    <div class="badges">
+      <span class="badge">${x.language==="hi"?"HI":"EN"}</span>
+      <span class="badge" style="background:var(--red);border-color:var(--red)">FULL</span>
+    </div>
+    <div class="overlay">
+      <h3>${esc(x.title)}</h3>
+      <div class="crow"><span class="star">★ ${x.rating.toFixed(1)}</span><span class="yr">${x.year}</span></div>
+      <div class="acts">
+        <button class="mini play" title="Play movie" onclick="event.stopPropagation();openDetails(${x.id},false,true)">
+          <svg viewBox="0 0 24 24" width="15" height="15" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="mini add ${saved?'saved':''}" title="Watchlist" onclick="event.stopPropagation();toggleWL(${x.id})">${saved?'✓':'+'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+function rowHTML(name,items){
+  if(!items.length)return"";
+  return `<section class="row"><h2>${name}</h2><div class="row-scroll">${items.map(cardHTML).join("")}</div></section>`;
+}
+
+/* ---------- views ---------- */
+let state={view:"home",search:"",lang:"all",genre:null};
+let heroIdx=0, heroTimer=null, currentId=null;
+
+function render(){
+  setActiveNav();
+  if(state.view==="home")renderHome();
+  else if(state.view==="browse")renderBrowse();
+  else if(state.view==="trending")renderTrending();
+  else if(state.view==="watchlist")renderWatchlist();
+}
+function setActiveNav(){document.querySelectorAll("nav.links a").forEach(a=>
+  a.classList.toggle("active",a.dataset.view===state.view));}
+
+function renderHome(){
+  const hero=[...MOVIES].sort((a,b)=>b.popularity-a.popularity).slice(0,6);
+  const h=hero[heroIdx%hero.length];
+  const saved=isSaved(h.id);
+  const rows=ROWS.map(r=>rowHTML(r.name,r.fn(MOVIES))).join("");
+  $("#app").innerHTML=`
+    <section class="hero">
+      <div class="bg"><div style="position:absolute;inset:0;background:${gradientFor(h.title)}"></div>
+        <img src="${h.poster}" alt="" onerror="this.style.display='none'"/></div>
+      <div class="shade1"></div><div class="shade2"></div>
+      <div class="hero-content">
+        <div class="tag">Featured Film</div>
+        <h1>${esc(h.title)}</h1>
+        <div class="meta"><span class="star">★ ${h.rating.toFixed(1)}</span><span>${h.year}</span><span>${h.language==="hi"?"Hindi":"English"}</span><span>${fmtRuntime(h.runtime)}</span></div>
+        <p class="desc">${esc(h.overview)}</p>
+        <div class="hero-actions">
+          <button class="btn btn-red" onclick="openDetails(${h.id},false,true)"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg> Play</button>
+          <button class="btn btn-ghost" onclick="openDetails(${h.id})"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> More Info</button>
+          <button class="icon-btn ${saved?'saved':''}" onclick="toggleWL(${h.id})" title="Watchlist">${saved?'✓':'+'}</button>
+        </div>
+      </div>
+      <div class="hero-dots">${hero.map((_,i)=>`<button class="${i===heroIdx%hero.length?'on':''}" onclick="setHero(${i})"></button>`).join("")}</div>
+    </section>
+    <div class="rows">${rows}</div>`;
+  startHero(hero.length);
+}
+function setHero(i){heroIdx=i;renderHome();}
+function startHero(n){clearInterval(heroTimer);if(n>1)heroTimer=setInterval(()=>{heroIdx=(heroIdx+1)%n;if(state.view==="home")renderHome();},8000);}
+
+function allGenres(){const s=new Set();MOVIES.forEach(x=>x.genres.forEach(g=>s.add(g)));return[...s].sort();}
+function renderBrowse(){
+  let list=MOVIES;
+  if(state.search){const q=state.search.toLowerCase();list=list.filter(x=>x.title.toLowerCase().includes(q));}
+  else{
+    if(state.lang!=="all")list=list.filter(x=>x.language===state.lang);
+    if(state.genre)list=list.filter(x=>x.genres.includes(state.genre));
+  }
+  const langSeg=["all","en","hi"].map(k=>`<button class="${state.lang===k?'on':''}" onclick="setLang('${k}')">${k==="all"?"All":k==="en"?"English":"Hindi"}</button>`).join("");
+  const chips=`<button class="chip ${!state.genre?'on':''}" onclick="setGenre(null)">All Genres</button>`+
+    allGenres().map(g=>`<button class="chip ${state.genre===g?'on':''}" onclick="setGenre('${g}')">${g}</button>`).join("");
+  $("#app").innerHTML=`<div class="view">
+    <h1>${state.search?`Results for "${esc(state.search)}"`:"Browse Movies"}</h1>
+    ${state.search?`<div class="chips"><button class="chip" onclick="clearSearch()">← Clear search</button></div>`:`
+      <div class="filters"><div class="seg">${langSeg}</div></div>
+      <div class="chips">${chips}</div>`}
+    ${list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:`<p class="empty">No movies found. Try a different filter or search.</p>`}
+  </div>`;
+}
+function setLang(k){state.lang=k;render();}
+function setGenre(g){state.genre=state.genre===g?null:g;render();}
+function clearSearch(){state.search="";if($("#searchInput"))$("#searchInput").value="";render();}
+
+function renderTrending(){
+  const list=[...MOVIES].sort((a,b)=>b.popularity-a.popularity);
+  $("#app").innerHTML=`<div class="view"><h1>🔥 Trending Now</h1><div class="grid">${list.map(cardHTML).join("")}</div></div>`;
+}
+function renderWatchlist(){
+  const ids=getWL();const list=MOVIES.filter(x=>ids.includes(x.id));
+  $("#app").innerHTML=`<div class="view"><h1>My Watchlist</h1>${
+    list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:
+    `<p class="empty">Your watchlist is empty. Tap the + on any movie to save it here.</p>`}</div>`;
+}
+
+/* ---------- details modal ---------- */
+function openDetails(id,scroll,autoplay){
+  currentId=Number(id);const x=byId(id);if(!x)return;
+  const saved=isSaved(x.id);
+  const similar=MOVIES.filter(s=>s.id!==x.id&&s.genres.some(g=>x.genres.includes(g))).slice(0,12);
+  $("#modalInner").innerHTML=`
+    <button class="close-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="modal-hero">
+      <div class="fallback" style="background:${gradientFor(x.title)}"></div>
+      <img src="${x.poster}" alt="" onerror="this.style.display='none'"/>
+      <div class="shade"></div>
+    </div>
+    <div class="modal-body">
+      <div class="md-head">
+        <div class="md-poster" style="background:${gradientFor(x.title)}">
+          <img src="${x.poster}" alt="${esc(x.title)}" onerror="this.style.display='none'"/></div>
+        <div class="md-info">
+          <span class="pill">${x.language==="hi"?"Hindi":"English"}</span>
+          <h1>${esc(x.title)}</h1>
+          <div class="md-meta"><span class="star">★ ${x.rating.toFixed(1)} <span style="color:var(--muted)">/10</span></span><span>${x.year}</span><span>${fmtRuntime(x.runtime)}</span></div>
+          <div class="md-genres">${x.genres.map(g=>`<span class="gtag">${g}</span>`).join("")}</div>
+          <div class="md-audio"><div class="lbl">Audio</div>${x.audio.map(a=>`<span class="audio-pill">${a}</span>`).join("")}</div>
+          <p class="md-desc">${esc(x.overview)}</p>
+          <div class="md-actions">
+            <button class="btn btn-red" onclick="playMovie()"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg> Play Movie</button>
+            <button class="btn btn-ghost" onclick="toggleWL(${x.id})">${saved?'✓ In Watchlist':'+ Add to Watchlist'}</button>
+          </div>
+        </div>
+      </div>
+      <div class="player-wrap">
+        <h2><svg viewBox="0 0 24 24" width="22" height="22" style="color:var(--red)"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg> Watch Full Movie</h2>
+        <div class="player-box" id="playerBox">
+          <button class="player-cta" onclick="playMovie()">
+            <img src="${x.poster}" alt="" onerror="this.style.display='none'"/>
+            <div class="circle"><svg viewBox="0 0 24 24" width="34" height="34" style="fill:#fff;stroke:none"><path d="M8 5v14l11-7z"/></svg></div>
+            <span>Play Full Movie</span>
+          </button>
+        </div>
+        <p class="player-note">Full feature film · public-domain print streamed via the Internet Archive.</p>
+      </div>
+      ${similar.length?`<div class="similar"><section class="row"><h2 style="padding-left:0">More Like This</h2><div class="row-scroll" style="padding-left:0">${similar.map(cardHTML).join("")}</div></section></div>`:""}
+    </div>`;
+  $("#modal").classList.add("open");
+  document.body.style.overflow="hidden";
+  $("#modalInner").scrollTop=0;
+  if(autoplay)playMovie();
+}
+function playMovie(){
+  const x=byId(currentId);if(!x)return;
+  $("#playerBox").innerHTML=`<video src="${x.video}" poster="${x.poster}" controls autoplay playsinline></video>`;
+  $("#playerBox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function closeModal(){$("#modal").classList.remove("open");document.body.style.overflow="";if($("#playerBox"))$("#playerBox").innerHTML="";}
+
+/* ---------- nav / search ---------- */
+function go(view){state.view=view;state.search="";if($("#searchInput"))$("#searchInput").value="";
+  closeModal();$("#mobileLinks").classList.remove("open");window.scrollTo(0,0);render();}
+function doSearch(e){e.preventDefault();const v=$("#searchInput").value.trim();if(!v)return false;
+  state.search=v;state.view="browse";closeModal();window.scrollTo(0,0);render();return false;}
+function toggleMenu(){$("#mobileLinks").classList.toggle("open");}
+
+/* scroll style + ESC */
+window.addEventListener("scroll",()=>{$("#header").classList.toggle("scrolled",window.scrollY>20);});
+window.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+/* init */
+render();
+</script>
+</body>
+</html>
