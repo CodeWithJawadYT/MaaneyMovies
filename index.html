@@ -180,6 +180,78 @@
   @media(min-width:768px){footer{padding:40px 48px}}
   footer .logo{font-size:20px;display:inline-block;margin-bottom:10px}
   svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ============================================================
+     MOBILE RESPONSIVE POLISH (overrides above — desktop unchanged)
+     ============================================================ */
+  @media(max-width:768px){
+    /* --- navbar: shrink logo, let search flex, keep hamburger --- */
+    .nav{padding:12px 16px;gap:10px}
+    .logo{font-size:20px;letter-spacing:.06em}
+    .nav-right{flex:1;gap:8px;justify-content:flex-end}
+    .search{flex:1;min-width:0;max-width:300px}
+    .search input{width:100%;padding:10px 12px 10px 34px;font-size:14px}
+    .menu-btn{flex:0 0 auto}
+
+    /* --- hero: tighter spacing, fits viewport better --- */
+    .hero{height:78vh;min-height:460px}
+    .hero-content{padding:0 16px 56px;max-width:100%}
+    .hero h1{font-size:clamp(30px,9vw,44px)}
+    .hero .meta{gap:12px;font-size:13px;margin-top:12px}
+    .hero p.desc{font-size:14px;margin-top:12px;-webkit-line-clamp:3}
+    .hero-actions{gap:10px;margin-top:20px}
+    .hero-dots{bottom:18px;right:16px}
+
+    /* --- buttons: comfortable touch targets --- */
+    .btn{padding:12px 18px;font-size:14px}
+    .icon-btn{height:46px;width:46px}
+
+    /* --- rows / cards --- */
+    .rows{margin-top:-36px}
+    .row{padding:8px 0}
+    .row h2{font-size:18px;padding:0 16px 6px}
+    .row-scroll{gap:10px;padding:14px 16px}
+    .card{width:138px}
+    /* touch devices have no hover — reveal title + quick actions */
+    .card .overlay{opacity:1;background:linear-gradient(to top,rgba(5,5,5,.96),rgba(5,5,5,.25) 55%,transparent)}
+    .card .overlay h3{font-size:13px}
+    .card:hover{transform:none}
+
+    /* --- grid views: clean 2-up --- */
+    .view{padding-top:80px}
+    .view h1{font-size:clamp(24px,6vw,32px)}
+    .grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:20px 16px}
+    .filters{padding:18px 16px 0}
+    .chips{padding:14px 16px 0;gap:8px}
+    .chip,.seg button{font-size:13px}
+
+    /* --- details modal: stacked, readable --- */
+    .modal-hero{height:32vh;min-height:190px}
+    .modal-body{margin-top:-56px;padding:0 16px 48px}
+    .md-head{gap:16px}
+    .md-poster{width:104px;border-radius:8px}
+    .md-info{min-width:0;flex:1 1 100%;padding-top:0}
+    .md-info h1{font-size:26px;margin-top:10px}
+    .md-meta{gap:12px;font-size:13px;margin-top:10px}
+    .md-genres{margin-top:10px;gap:6px}
+    .md-desc{font-size:14px;margin-top:14px}
+    .md-actions{gap:10px;margin-top:18px}
+    .md-actions .btn{flex:1 1 auto;justify-content:center}
+    .close-btn{top:14px;right:14px;height:40px;width:40px}
+    .player-wrap{margin-top:28px}
+    .player-wrap h2{font-size:18px}
+
+    footer{padding:32px 16px;margin-top:28px}
+  }
+
+  /* very small phones */
+  @media(max-width:400px){
+    .logo{font-size:17px;letter-spacing:.04em}
+    .search input::placeholder{font-size:13px}
+    .card{width:124px}
+    .grid{gap:10px}
+    .btn{padding:11px 14px;font-size:13px}
+  }
 </style>
 </head>
 <body>
